@@ -24,7 +24,7 @@ import dji.sdk.api.GroundStation.DJIGroundStationTypeDef.DJIGroundStationMovingM
 import dji.sdk.api.GroundStation.DJIGroundStationTypeDef.GroundStationResult;
 import dji.sdk.api.GroundStation.DJIGroundStationWaypoint;
 import dji.sdk.api.MainController.DJIMainControllerSystemState;
-import dji.sdk.interfaces.DJIGerneralListener;
+import dji.sdk.interfaces.DJIGeneralListener;
 import dji.sdk.interfaces.DJIGroundStationExecuteCallBack;
 import dji.sdk.interfaces.DJIMcuUpdateStateCallBack;
 
@@ -80,6 +80,7 @@ public class GSDemoActivity extends DemoBaseActivity implements OnClickListener,
 	
 	private Timer mTimer;
 	private TimerTask mTask;
+	LatLng pos;
 	
 	private Handler handler = new Handler(new Handler.Callback() {
         
@@ -144,17 +145,33 @@ public class GSDemoActivity extends DemoBaseActivity implements OnClickListener,
         onInitSDK(DroneCode);  // Initiate the SDK for Insprie 1
         DJIDrone.connectToDrone(); // Connect to Drone
         
+        mMcuUpdateStateCallBack = new DJIMcuUpdateStateCallBack(){
+
+            @Override
+            public void onResult(DJIMainControllerSystemState state) {
+            	droneLocationLat = state.droneLocationLatitude;
+            	droneLocationLng = state.droneLocationLongitude;
+            	Log.e(TAG, "drone lat "+state.droneLocationLatitude);
+            	Log.e(TAG, "drone lat "+state.homeLocationLatitude);
+            	Log.e(TAG, "drone lat "+state.droneLocationLongitude);
+            	Log.e(TAG, "drone lat "+state.homeLocationLongitude);
+            }     
+        };        
         new Thread(){
             public void run() {
                 try {
-                    DJIDrone.checkPermission(getApplicationContext(), new DJIGerneralListener() {
+                    DJIDrone.checkPermission(getApplicationContext(), new DJIGeneralListener() {
                         
                         @Override
                         public void onGetPermissionResult(int result) {
                             // TODO Auto-generated method stub
                             if (result == 0) {
                                 handler.sendMessage(handler.obtainMessage(SHOWDIALOG, DJIError.getCheckPermissionErrorDescription(result)));
-
+                                
+                                Log.e(TAG,"setMcuUpdateState");
+                                DJIDrone.getDjiMC().setMcuUpdateStateCallBack(mMcuUpdateStateCallBack);
+                                
+                                DJIDrone.getDjiMC().startUpdateTimer(1000); // Start the update timer for MC to update info
                                 updateDroneLocation(); // Obtain the drone's lat and lng from MCU.
                             } else {
                                 handler.sendMessage(handler.obtainMessage(SHOWDIALOG, getString(R.string.demo_activation_error)+DJIError.getCheckPermissionErrorDescription(result)+"\n"+getString(R.string.demo_activation_error_code)+result));
@@ -226,22 +243,7 @@ public class GSDemoActivity extends DemoBaseActivity implements OnClickListener,
     // Update the drone location based on states from MCU.
     private void updateDroneLocation(){
         // Set the McuUpdateSateCallBack
-        mMcuUpdateStateCallBack = new DJIMcuUpdateStateCallBack(){
-
-            @Override
-            public void onResult(DJIMainControllerSystemState state) {
-            	droneLocationLat = state.droneLocationLatitude;
-            	droneLocationLng = state.droneLocationLongitude;
-            	Log.e(TAG, "drone lat "+state.droneLocationLatitude);
-            	Log.e(TAG, "drone lat "+state.homeLocationLatitude);
-            	Log.e(TAG, "drone lat "+state.droneLocationLongitude);
-            	Log.e(TAG, "drone lat "+state.homeLocationLongitude);
-            }     
-        };
-        Log.e(TAG,"setMcuUpdateState");
-        DJIDrone.getDjiMC().setMcuUpdateStateCallBack(mMcuUpdateStateCallBack);
-        
-        LatLng pos = new LatLng(droneLocationLat, droneLocationLng);
+        pos = new LatLng(droneLocationLat, droneLocationLng);
         //Create MarkerOptions object
         final MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(pos);
@@ -329,7 +331,7 @@ public class GSDemoActivity extends DemoBaseActivity implements OnClickListener,
     }
     
     private void locateDrone(){
-        LatLng pos = new LatLng(droneLocationLat, droneLocationLng);
+        pos = new LatLng(droneLocationLat, droneLocationLng);
         CameraUpdate cu = CameraUpdateFactory.changeLatLng(pos);
         aMap.moveCamera(cu);
         

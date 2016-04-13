@@ -2,6 +2,7 @@
 <resources>
     <string name="ERR_DESCRIPTION_RESULT_FAILED">Result failed</string>
     <string name="ERR_DESCRIPTION_GET_SMART_BATTERY_INFO_FAILED">Get smart battery info failed</string>
+    <string name="ERR_DESCRIPTION_CANNOT_SET_PARAM_IN_THIS_STATE">Can not set the parameters in this state</string>
     <string name="ERR_DESCRIPTION_GET_REMOTE_NO_MEDIA">Get remote no media</string>
     <string name="ERR_DESCRIPTION_GET_REMOTE_MEDIA_HTTP_ERROR">Get remote media http error</string>
     <string name="ERR_DESCRIPTION_GET_REMOTE_MEDIA_FAILED">Get remote media failed</string>

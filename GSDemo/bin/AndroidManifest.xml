@@ -34,7 +34,7 @@
         
         <meta-data
             android:name="com.dji.sdk.API_KEY"
-            android:value="" />
+            android:value="462540cd568bd21a0a137d7f" />
         
         <meta-data
             android:name="com.amap.api.v2.apikey"

@@ -2360,7 +2360,7 @@
 		"typeID" : 1,
 		"size" : 2,
 		"attribute" : 11,
-		"minValue" : 10,
+		"minValue" : 20,
 		"maxValue" : 500,
 		"defaultValue" : 120,
 		"name" : "g_config.flying_limit.max_height_0"
@@ -5799,5 +5799,50 @@
 		"defaultValue" : 0,
 		"name" : "g_config.fdi_open.ctrl_vibrate_fdi_open_0",
 		"modify" : true
+	},
+	{
+		"index" : 1326,
+		"typeID" : 0,
+		"size" : 1,
+		"attribute" : 11,
+		"minValue" : 0,
+		"maxValue" : 1,
+		"defaultValue" : 1,
+		"name" : "g_config.mvo_cfg.mvo_func_en_0",
+		"modify" : true
+	},
+	{
+		"index" : 1327,
+		"typeID" : 0,
+		"size" : 1,
+		"attribute" : 11,
+		"minValue" : 0,
+		"maxValue" : 1,
+		"defaultValue" : 1,
+		"name" : "g_config.misc_cfg.forearm_lamp_ctrl_0",
+		"modify" : true
+	},
+	{
+		"index" : 1328,
+		"typeID" : 0,
+		"size" : 1,
+		"attribute" : 11,
+		"minValue" : 0,
+		"maxValue" : 1,
+		"defaultValue" : 1,
+		"name" : "g_config.avoid_obstacle_limit_cfg.avoid_obstacle_enable_0",
+		"modify" : true
+	},
+	{
+		"index" : 1329,
+		"typeID" : 0,
+		"size" : 1,
+		"attribute" : 11,
+		"minValue" : 0,
+		"maxValue" : 1,
+		"defaultValue" : 1,
+		"name" : "g_config.followme_cfg.enable_change_homepoint_0",
+		"modify" : true
 	}
+	
 ]
