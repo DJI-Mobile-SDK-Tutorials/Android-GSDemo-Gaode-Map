@@ -1,0 +1,18 @@
+[
+    {
+        "merged": "/Users/zlinoliver/Desktop/Android_GSDemo_Google/GSDemo/dJISDKLIB/build/intermediates/res/merged/androidTest/debug/layout/log_dialog_view.xml",
+        "source": "/Users/zlinoliver/Desktop/Android_GSDemo_Google/GSDemo/dJISDKLIB/build/intermediates/bundles/debug/res/layout/log_dialog_view.xml"
+    },
+    {
+        "merged": "/Users/zlinoliver/Documents/DJI-SDK/documentation/Android-GSDemo-GoogleMap/GSDemo/dJISDKLIB/build/intermediates/res/merged/androidTest/debug/layout/log_dialog_view.xml",
+        "source": "/Users/zlinoliver/Documents/DJI-SDK/documentation/Android-GSDemo-GoogleMap/GSDemo/dJISDKLIB/build/intermediates/bundles/debug/res/layout/log_dialog_view.xml"
+    },
+    {
+        "merged": "/Users/zlinoliver/Documents/DJI-SDK-Github/Android-GSDemo-Gaode-Map/GSDemo/dJISDKLIB/build/intermediates/res/merged/androidTest/debug/layout/log_dialog_view.xml",
+        "source": "/Users/zlinoliver/Documents/DJI-SDK-Github/Android-GSDemo-Gaode-Map/GSDemo/dJISDKLIB/build/intermediates/bundles/debug/res/layout/log_dialog_view.xml"
+    },
+    {
+        "merged": "/Users/zlinoliver/Documents/DJI-SDK/documentation/Android-GSDemo-GaodeMap/GSDemo/dJISDKLIB/build/intermediates/res/merged/androidTest/debug/layout/log_dialog_view.xml",
+        "source": "/Users/zlinoliver/Documents/DJI-SDK/documentation/Android-GSDemo-GaodeMap/GSDemo/dJISDKLIB/build/intermediates/bundles/debug/res/layout/log_dialog_view.xml"
+    }
+]

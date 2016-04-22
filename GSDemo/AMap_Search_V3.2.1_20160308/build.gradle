@@ -1,0 +1,2 @@
+configurations.create("default")
+artifacts.add("default", file('AMap_Search_V3.2.1_20160308.jar'))

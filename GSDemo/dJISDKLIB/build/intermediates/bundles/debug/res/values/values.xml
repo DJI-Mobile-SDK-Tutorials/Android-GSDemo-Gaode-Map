@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="midware_white_half">#77ffffff</color>
+    <declare-styleable name="DJIDeviceType"><attr name="djiDeviceType"><enum name="phone" value="0"/><enum name="pad" value="1"/></attr></declare-styleable>
+    <declare-styleable name="DJITextView"><attr name="djiTextFace"><enum name="demi" value="0"/><enum name="nlight" value="1"/><enum name="nbold" value="2"/><enum name="bold" value="3"/></attr></declare-styleable>
+    <string name="app_name">DJI-SDK-LIB</string>
+    <style name="AppBaseTheme" parent="android:Theme.Light">
+        <!--
+            Theme customizations available in newer API levels can go in
+            res/values-vXX/styles.xml, while customizations related to
+            backward-compatibility can go here.
+        -->
+    </style>
+    <style name="AppTheme" parent="AppBaseTheme">
+        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+    </style>
+    <style name="DialogTheme" parent="android:Theme.Dialog">
+        <item name="android:windowNoTitle">true</item>
+    </style>
+    <style name="LogDialog" parent="@android:style/Theme.Dialog">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowFrame">@null</item>
+    </style>
+</resources>
