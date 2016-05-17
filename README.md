@@ -239,7 +239,7 @@ android {
     defaultConfig {
         ...
         minSdkVersion 19
-        targetSdkVersion 22
+        targetSdkVersion 23
         ...
         
     }
@@ -252,7 +252,7 @@ dependencies {
 }
 ~~~
 
-Here we also declare the "compileSdkVersion", "buildToolsVersion", "minSdkVersion" and "targetSdkVersion". Please make sure the **targetSdkVersion** is assigned as 22 here. 
+Here we also declare the "compileSdkVersion", "buildToolsVersion", "minSdkVersion" and "targetSdkVersion". 
 
 Now let's select the **Tools -> Android -> Sync Project with Gradle Files** on the top bar and wait for Gradle project sync finish.
 
