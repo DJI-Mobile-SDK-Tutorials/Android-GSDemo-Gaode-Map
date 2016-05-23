@@ -711,7 +711,7 @@ Now let's build and run the project and install it to your Android device. If ev
 
 ![registerSuccess](./Images/registerSuccess.png)
 
-> **Important:** Please check if the "armeabi-v7a" lib folder has been added to your jnLibs folder in **dJISDKLib** successfully before testing resgistering the app. 
+> **Important:** Please check if the "armeabi-v7a", "arm64-v8a" and "x86" lib folders has been added to your jnLibs folder in **dJISDKLib** successfully before testing resgistering the app. 
 > 
 > ![armeabi](./Images/armeabi.png)
 
