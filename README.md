@@ -11,7 +11,7 @@ Also you will know how to setup the DJI PC Simulator, upgrade your Inspire 1, Ph
 
 You can download the demo project from this **Github Page**.
 
-> Note: In this tutorial, we will use Inspire 1 for testing. Using the [Gaode Map API](http://lbs.amap.com) for navigating.
+> Note: In this tutorial, we will use Inspire 1 for testing, use Android Studio 2.1.1 for developing the demo application, and use the [Gaode Map API](http://lbs.amap.com) for navigating.
 
 ## Using The DJI PC Simulator
 
