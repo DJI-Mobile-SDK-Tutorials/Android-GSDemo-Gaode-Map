@@ -608,8 +608,6 @@ After you finish the above steps, let's register our application with the **App 
 **1.** Let's open the AndroidManifest.xml file and add the following elements to it:
 
 ~~~xml
-<uses-sdk
-
     <uses-feature
         android:name="android.hardware.usb.host"
         android:required="false" />
