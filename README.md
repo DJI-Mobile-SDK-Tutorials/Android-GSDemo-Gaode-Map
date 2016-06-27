@@ -1,3 +1,5 @@
+#### This tutorial is now deprecated, please refer to <https://developer.dji.com/mobile-sdk/documentation/android-tutorials/GSDemo-Gaode-Map.html> in DJI Developer Website.
+
 # Creating a MapView and Waypoint Application
 
 <!-- toc -->
