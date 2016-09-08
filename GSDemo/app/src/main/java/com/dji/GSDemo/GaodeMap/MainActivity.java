@@ -32,19 +32,21 @@ import com.amap.api.maps2d.model.MarkerOptions;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import dji.sdk.FlightController.DJIFlightController;
-import dji.sdk.FlightController.DJIFlightControllerDataType;
-import dji.sdk.FlightController.DJIFlightControllerDelegate;
-import dji.sdk.MissionManager.DJIMission;
-import dji.sdk.MissionManager.DJIMissionManager;
-import dji.sdk.MissionManager.DJIWaypoint;
-import dji.sdk.MissionManager.DJIWaypointMission;
-import dji.sdk.Products.DJIAircraft;
+import dji.common.flightcontroller.DJIFlightControllerCurrentState;
+import dji.common.util.DJICommonCallbacks;
+import dji.sdk.flightcontroller.DJIFlightController;
+import dji.common.flightcontroller.DJIFlightControllerDataType;
+import dji.sdk.flightcontroller.DJIFlightControllerDelegate;
+import dji.sdk.missionmanager.DJIMission;
+import dji.sdk.missionmanager.DJIMissionManager;
+import dji.sdk.missionmanager.DJIWaypoint;
+import dji.sdk.missionmanager.DJIWaypointMission;
+import dji.sdk.products.DJIAircraft;
 import dji.sdk.base.DJIBaseComponent;
 import dji.sdk.base.DJIBaseProduct;
-import dji.sdk.base.DJIError;
+import dji.common.error.DJIError;
 
-public class MainActivity extends FragmentActivity implements View.OnClickListener, DJIMissionManager.MissionProgressStatusCallback, DJIBaseComponent.DJICompletionCallback, OnMapClickListener {
+public class MainActivity extends FragmentActivity implements View.OnClickListener, DJIMissionManager.MissionProgressStatusCallback, DJICommonCallbacks.DJICompletionCallback, OnMapClickListener {
 
     protected static final String TAG = "MainActivity";
 
@@ -216,7 +218,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             mFlightController.setUpdateSystemStateCallback(new DJIFlightControllerDelegate.FlightControllerUpdateSystemStateCallback() {
 
                 @Override
-                public void onResult(DJIFlightControllerDataType.DJIFlightControllerCurrentState state) {
+                public void onResult(DJIFlightControllerCurrentState state) {
                     droneLocationLat = state.getAircraftLocation().getLatitude();
                     droneLocationLng = state.getAircraftLocation().getLongitude();
                     updateDroneLocation();
@@ -481,7 +483,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 }
             };
 
-            mMissionManager.prepareMission(mWaypointMission, progressHandler, new DJIBaseComponent.DJICompletionCallback() {
+            mMissionManager.prepareMission(mWaypointMission, progressHandler, new DJICommonCallbacks.DJICompletionCallback() {
                 @Override
                 public void onResult(DJIError error) {
                     setResultToToast(error == null ? "Mission Prepare Successfully" : error.getDescription());
@@ -495,7 +497,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
         if (mMissionManager != null) {
 
-            mMissionManager.startMissionExecution(new DJIBaseComponent.DJICompletionCallback() {
+            mMissionManager.startMissionExecution(new DJICommonCallbacks.DJICompletionCallback() {
                 @Override
                 public void onResult(DJIError error) {
                     setResultToToast("Mission Start: " + (error == null ? "Successfully" : error.getDescription()));
@@ -508,7 +510,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private void stopWaypointMission(){
 
         if (mMissionManager != null) {
-            mMissionManager.stopMissionExecution(new DJIBaseComponent.DJICompletionCallback() {
+            mMissionManager.stopMissionExecution(new DJICommonCallbacks.DJICompletionCallback() {
 
                 @Override
                 public void onResult(DJIError error) {

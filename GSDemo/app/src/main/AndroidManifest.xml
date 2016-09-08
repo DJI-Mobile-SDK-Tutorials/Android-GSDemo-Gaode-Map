@@ -4,6 +4,8 @@
     android:versionCode="1"
     android:versionName="1.0">
 
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
@@ -59,7 +61,7 @@
             android:value="YOUR_AMAP_KEY" />
 
         <activity
-            android:name="dji.sdk.SDKManager.DJIAoaControllerActivity"
+            android:name="dji.sdk.sdkmanager.DJIAoaControllerActivity"
             android:theme="@android:style/Theme.Translucent">
             <intent-filter>
                 <action android:name="android.hardware.usb.action.USB_ACCESSORY_ATTACHED" />
@@ -70,7 +72,7 @@
                 android:resource="@xml/accessory_filter" />
         </activity>
 
-        <service android:name="dji.sdk.SDKManager.DJIGlobalService"></service>
+        <service android:name="dji.sdk.sdkmanager.DJIGlobalService"></service>
 
         <!-- DJI SDK -->
 

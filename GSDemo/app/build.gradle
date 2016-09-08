@@ -35,4 +35,5 @@ dependencies {
     compile project(':AMap_2DMap_V2.8.1_20160202')
     compile project(':AMap_Search_V3.2.1_20160308')
     compile project(':dJISDKLIB')
+
 }

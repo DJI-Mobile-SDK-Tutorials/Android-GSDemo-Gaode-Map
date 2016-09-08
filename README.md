@@ -1,5 +1,3 @@
-> Note: This sample code will be updated to Android SDK 3.3 soon.
-
 # Android-GSDemo-Gaode-Map
 
 ## Introduction
@@ -10,7 +8,7 @@ This GSDemo-Gaode-Map is designed for you to learn how to implement the DJIWaypo
 
  - Android Studio 2.0+
  - Android System 4.1+
- - DJI Android SDK 3.2.1
+ - DJI Android SDK 3.3
 
 ## Tutorial
 
