@@ -52,7 +52,7 @@ public class DJIDemoApplication extends Application {
 
                     @Override
                     public void run() {
-                        Toast.makeText(getApplicationContext(), "Success", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), "Register Success", Toast.LENGTH_LONG).show();
                     }
                 });
                 Log.d(TAG, "Register success");

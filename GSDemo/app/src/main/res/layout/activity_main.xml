@@ -55,10 +55,10 @@
             android:text="Config"
             android:layout_weight="0.9"/>
         <Button
-            android:id="@+id/prepare"
+            android:id="@+id/upload"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Prepare"
+            android:text="Upload"
             android:layout_weight="0.9"/>
         <Button
             android:id="@+id/start"
