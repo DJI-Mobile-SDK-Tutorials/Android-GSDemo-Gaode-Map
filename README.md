@@ -1,7 +1,5 @@
 # Android-GSDemo-Gaode-Map
 
-> **Note: This Sample Project is developed based on Android SDK v3.5.1, an update version for Android SDK v4.0 will be published soon.**
-
 ## Introduction
 
 This GSDemo-Gaode-Map is designed for you to learn how to implement the DJIWaypoint Mission features and get familiar with the usages of DJIMissionManager. Also you will know how to test the Waypoint Mission API with DJI PC Simulator. This demo is build based on the [Gaode Map](http://lbs.amap.com).
@@ -10,7 +8,7 @@ This GSDemo-Gaode-Map is designed for you to learn how to implement the DJIWaypo
 
  - Android Studio 2.0+
  - Android System 4.1+
- - DJI Android SDK 3.5.1
+ - DJI Android SDK 4.0
 
 ## Tutorial
 
