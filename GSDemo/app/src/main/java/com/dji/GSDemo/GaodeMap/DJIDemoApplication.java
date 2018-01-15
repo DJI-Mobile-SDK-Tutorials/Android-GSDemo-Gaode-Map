@@ -1,6 +1,7 @@
 package com.dji.GSDemo.GaodeMap;
 
 import android.app.Application;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Handler;
@@ -21,9 +22,26 @@ public class DJIDemoApplication extends Application {
 
     public static final String FLAG_CONNECTION_CHANGE = "dji_sdk_connection_change";
 
+    private DJISDKManager.SDKManagerCallback mDJISDKManagerCallback;
+    private BaseProduct.BaseProductListener mDJIBaseProductListener;
+    private BaseComponent.ComponentListener mDJIComponentListener;
     private static BaseProduct mProduct;
+    public Handler mHandler;
 
-    private Handler mHandler;
+    private Application instance;
+
+    public void setContext(Application application) {
+        instance = application;
+    }
+
+    @Override
+    public Context getApplicationContext() {
+        return instance;
+    }
+
+    public DJIDemoApplication() {
+
+    }
 
     public static synchronized BaseProduct getProductInstance() {
         if (null == mProduct) {
@@ -38,90 +56,95 @@ public class DJIDemoApplication extends Application {
 
         mHandler = new Handler(Looper.getMainLooper());
 
-        //Check the permissions before registering the application for android system 6.0 above.
-        int permissionCheck = ContextCompat.checkSelfPermission(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        int permissionCheck2 = ContextCompat.checkSelfPermission(this, android.Manifest.permission.READ_PHONE_STATE);
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M || (permissionCheck == 0 && permissionCheck2 == 0)) {
+        mDJIComponentListener = new BaseComponent.ComponentListener() {
 
+            @Override
+            public void onConnectivityChange(boolean isConnected) {
+                notifyStatusChange();
+            }
+
+        };
+        mDJIBaseProductListener = new BaseProduct.BaseProductListener() {
+
+            @Override
+            public void onComponentChange(BaseProduct.ComponentKey key, BaseComponent oldComponent, BaseComponent newComponent) {
+
+                if(newComponent != null) {
+                    newComponent.setComponentListener(mDJIComponentListener);
+                }
+                notifyStatusChange();
+            }
+
+            @Override
+            public void onConnectivityChange(boolean isConnected) {
+
+                notifyStatusChange();
+            }
+
+        };
+
+        /**
+         * When starting SDK services, an instance of interface DJISDKManager.DJISDKManagerCallback will be used to listen to
+         * the SDK Registration result and the product changing.
+         */
+        mDJISDKManagerCallback = new DJISDKManager.SDKManagerCallback() {
+
+            //Listens to the SDK registration result
+            @Override
+            public void onRegister(DJIError error) {
+
+                if(error == DJISDKError.REGISTRATION_SUCCESS) {
+
+                    Handler handler = new Handler(Looper.getMainLooper());
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getApplicationContext(), "Register Success", Toast.LENGTH_LONG).show();
+                        }
+                    });
+
+                    DJISDKManager.getInstance().startConnectionToProduct();
+
+                } else {
+
+                    Handler handler = new Handler(Looper.getMainLooper());
+                    handler.post(new Runnable() {
+
+                        @Override
+                        public void run() {
+                            Toast.makeText(getApplicationContext(), "Register sdk fails, check network is available", Toast.LENGTH_LONG).show();
+                        }
+                    });
+
+                }
+                Log.e("TAG", error.toString());
+            }
+
+            //Listens to the connected product changing, including two parts, component changing or product connection changing.
+            @Override
+            public void onProductChange(BaseProduct oldProduct, BaseProduct newProduct) {
+
+                mProduct = newProduct;
+                if(mProduct != null) {
+                    mProduct.setBaseProductListener(mDJIBaseProductListener);
+                }
+
+                notifyStatusChange();
+            }
+        };
+        //Check the permissions before registering the application for android system 6.0 above.
+        int permissionCheck = ContextCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        int permissionCheck2 = ContextCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.READ_PHONE_STATE);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M || (permissionCheck == 0 && permissionCheck2 == 0)) {
             //This is used to start SDK services and initiate SDK.
-            DJISDKManager.getInstance().registerApp(this, mDJISDKManagerCallback);
+            DJISDKManager.getInstance().registerApp(getApplicationContext(), mDJISDKManagerCallback);
+            Toast.makeText(getApplicationContext(), "registering, pls wait...", Toast.LENGTH_LONG).show();
+
         } else {
             Toast.makeText(getApplicationContext(), "Please check if the permission is granted.", Toast.LENGTH_LONG).show();
         }
 
     }
-
-    private DJISDKManager.SDKManagerCallback mDJISDKManagerCallback = new DJISDKManager.SDKManagerCallback() {
-
-        @Override
-        public void onRegister(DJIError error) {
-
-            Log.d(TAG, error == null ? "success" : error.getDescription());
-            if(error == DJISDKError.REGISTRATION_SUCCESS) {
-                DJISDKManager.getInstance().startConnectionToProduct();
-                Handler handler = new Handler(Looper.getMainLooper());
-                handler.post(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        Toast.makeText(getApplicationContext(), "Register Success", Toast.LENGTH_LONG).show();
-                    }
-                });
-                Log.d(TAG, "Register success");
-
-            } else {
-                Handler handler = new Handler(Looper.getMainLooper());
-                handler.post(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        Toast.makeText(getApplicationContext(), "register sdk fails, check network is available", Toast.LENGTH_LONG).show();
-                    }
-                });
-
-                Log.d(TAG, "Register failed");
-
-            }
-            Log.e(TAG, error == null ? "success" : error.getDescription());
-        }
-
-        @Override
-        public void onProductChange(BaseProduct oldProduct, BaseProduct newProduct) {
-
-            mProduct = newProduct;
-            if(mProduct != null) {
-                mProduct.setBaseProductListener(mDJIBaseProductListener);
-            }
-
-            notifyStatusChange();
-        }
-    };
-
-    private BaseProduct.BaseProductListener mDJIBaseProductListener = new BaseProduct.BaseProductListener() {
-
-        @Override
-        public void onComponentChange(BaseProduct.ComponentKey key, BaseComponent oldComponent, BaseComponent newComponent) {
-            if(newComponent != null) {
-                newComponent.setComponentListener(mDJIComponentListener);
-            }
-            notifyStatusChange();
-        }
-
-        @Override
-        public void onConnectivityChange(boolean isConnected) {
-            notifyStatusChange();
-        }
-
-    };
-
-    private BaseComponent.ComponentListener mDJIComponentListener = new BaseComponent.ComponentListener() {
-
-        @Override
-        public void onConnectivityChange(boolean isConnected) {
-            notifyStatusChange();
-        }
-
-    };
 
     private void notifyStatusChange() {
         mHandler.removeCallbacks(updateRunnable);
@@ -133,7 +156,7 @@ public class DJIDemoApplication extends Application {
         @Override
         public void run() {
             Intent intent = new Intent(FLAG_CONNECTION_CHANGE);
-            sendBroadcast(intent);
+            getApplicationContext().sendBroadcast(intent);
         }
     };
 
