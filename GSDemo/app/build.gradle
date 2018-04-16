@@ -25,6 +25,10 @@ android {
         }
     }
 
+    packagingOptions {
+        exclude 'META-INF/rxjava.properties'
+    }
+
     //Mention in the doc
     dexOptions {
         incremental = true;
@@ -54,7 +58,7 @@ dependencies {
     compile project(':AMap_Search_V3.2.1_20160308')
     compile 'com.android.support:multidex:1.0.1'
 
-    compile ('com.dji:dji-sdk:4.4.1')
-    provided ('com.dji:dji-sdk-provided:4.4.1')
+    compile ('com.dji:dji-sdk:4.5')
+    provided ('com.dji:dji-sdk-provided:4.5')
 
 }
