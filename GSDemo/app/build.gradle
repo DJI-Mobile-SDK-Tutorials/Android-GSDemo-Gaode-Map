@@ -58,7 +58,7 @@ dependencies {
     compile project(':AMap_Search_V3.2.1_20160308')
     compile 'com.android.support:multidex:1.0.1'
 
-    compile ('com.dji:dji-sdk:4.7.1')
-    provided ('com.dji:dji-sdk-provided:4.7.1')
+    compile ('com.dji:dji-sdk:4.8')
+    provided ('com.dji:dji-sdk-provided:4.8')
 
 }
