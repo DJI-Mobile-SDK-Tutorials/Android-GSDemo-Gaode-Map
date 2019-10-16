@@ -6,9 +6,10 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.widget.Toast;
+
+import androidx.core.content.ContextCompat;
 
 import dji.sdk.base.BaseComponent;
 import dji.sdk.base.BaseProduct;
@@ -123,6 +124,11 @@ public class DJIDemoApplication extends Application {
             }
             @Override
             public void onInitProcess(DJISDKInitEvent djisdkInitEvent, int i) {
+
+            }
+
+            @Override
+            public void onDatabaseDownloadProgress(long l, long l1) {
 
             }
 

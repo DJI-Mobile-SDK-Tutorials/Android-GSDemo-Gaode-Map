@@ -45,6 +45,7 @@
         <!-- DJI SDK -->
 
         <uses-library android:name="com.android.future.usb.accessory" />
+        <uses-library android:name="org.apache.http.legacy" android:required="false" />
 
         <!--
           ADD API_KEY HERE and make sure you
