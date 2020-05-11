@@ -65,10 +65,11 @@ public class ConnectionActivity extends Activity implements View.OnClickListener
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        checkAndRequestPermissions();
         setContentView(R.layout.activity_connection);
 
         initUI();
+        checkAndRequestPermissions();
+
 
         // Register the broadcast receiver for receiving the device connection's changes.
         IntentFilter filter = new IntentFilter();
@@ -92,6 +93,8 @@ public class ConnectionActivity extends Activity implements View.OnClickListener
             ActivityCompat.requestPermissions(this,
                     missingPermission.toArray(new String[missingPermission.size()]),
                     REQUEST_PERMISSION_CODE);
+        } else {
+            startSDKRegistration();
         }
 
     }
@@ -144,13 +147,23 @@ public class ConnectionActivity extends Activity implements View.OnClickListener
                         public void onProductDisconnect() {
                             Log.d(TAG, "onProductDisconnect");
                             showToast("Product Disconnected");
-
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    refreshSDKRelativeUI();
+                                }
+                            });
                         }
                         @Override
                         public void onProductConnect(BaseProduct baseProduct) {
                             Log.d(TAG, String.format("onProductConnect newProduct:%s", baseProduct));
                             showToast("Product Connected");
-
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    refreshSDKRelativeUI();
+                                }
+                            });
                         }
                         @Override
                         public void onComponentChange(BaseProduct.ComponentKey componentKey, BaseComponent oldComponent,

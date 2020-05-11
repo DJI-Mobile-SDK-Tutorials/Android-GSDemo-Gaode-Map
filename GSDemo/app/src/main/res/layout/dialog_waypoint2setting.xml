@@ -120,6 +120,12 @@
                 android:layout_height="wrap_content"
                 android:textSize="5pt"
                 android:text="BackTo 1st"/>
+<!--            <RadioButton-->
+<!--                android:id="@+id/untilStop"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:textSize="5pt"-->
+<!--                android:text="Until stop"/>-->
         </RadioGroup>
     </LinearLayout>
 
