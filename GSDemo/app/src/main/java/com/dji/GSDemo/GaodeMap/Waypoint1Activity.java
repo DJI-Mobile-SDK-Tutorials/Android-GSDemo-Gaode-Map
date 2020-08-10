@@ -163,7 +163,7 @@ public class Waypoint1Activity extends FragmentActivity implements View.OnClickL
         initMapView();
         initUI();
         addListener();
-
+        onProductConnectionChange();
     }
 
     protected BroadcastReceiver mReceiver = new BroadcastReceiver() {

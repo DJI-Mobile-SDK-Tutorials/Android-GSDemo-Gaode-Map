@@ -165,6 +165,17 @@ public class ConnectionActivity extends Activity implements View.OnClickListener
                                 }
                             });
                         }
+
+                        @Override
+                        public void onProductChanged(BaseProduct baseProduct) {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    refreshSDKRelativeUI();
+                                }
+                            });
+                        }
+
                         @Override
                         public void onComponentChange(BaseProduct.ComponentKey componentKey, BaseComponent oldComponent,
                                                       BaseComponent newComponent) {

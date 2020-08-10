@@ -39,6 +39,10 @@ import dji.common.error.DJIWaypointV2Error;
 import dji.common.flightcontroller.FlightControllerState;
 import dji.common.flightcontroller.RTKState;
 import dji.common.mission.waypoint.WaypointMissionHeadingMode;
+import dji.common.mission.waypointv2.Action.ActionDownloadEvent;
+import dji.common.mission.waypointv2.Action.ActionExecutionEvent;
+import dji.common.mission.waypointv2.Action.ActionState;
+import dji.common.mission.waypointv2.Action.ActionUploadEvent;
 import dji.common.mission.waypointv2.Action.WaypointV2Action;
 import dji.common.mission.waypointv2.WaypointV2;
 import dji.common.mission.waypointv2.WaypointV2Mission;
@@ -54,6 +58,7 @@ import dji.sdk.base.BaseProduct;
 import dji.sdk.flightcontroller.FlightController;
 import dji.sdk.flightcontroller.RTK;
 import dji.sdk.mission.MissionControl;
+import dji.sdk.mission.waypoint.WaypointV2ActionListener;
 import dji.sdk.mission.waypoint.WaypointV2MissionOperator;
 import dji.sdk.mission.waypoint.WaypointV2MissionOperatorListener;
 import dji.sdk.products.Aircraft;
@@ -90,7 +95,9 @@ public class Waypoint2Activity extends FragmentActivity implements View.OnClickL
     private WaypointV2ActionDialog mActionDialog;
     private List<WaypointV2Action> v2Actions;
     private boolean canUploadAction;
+    private boolean canUploadMission;
     private boolean canStartMission;
+    private boolean ifNeedUploadAction;
     private double mHomeLat = 181;
     private double mHomeLng = 181;
     private double mAircraftLat = 181;
@@ -171,11 +178,12 @@ public class Waypoint2Activity extends FragmentActivity implements View.OnClickL
                     mActionDialog = new WaypointV2ActionDialog();
                     mActionDialog.setActionCallback(actions -> {
                         v2Actions = actions;
-                        Log.d("v2_action", "originSize=" + actions.size());
+                        debugLog("v2_action originSize=" + actions.size());
                     });
                 }
                 mActionDialog.setSize(waypointMissionBuilder.getWaypointCount());
                 mActionDialog.show(getSupportFragmentManager(), "add_action");
+                ifNeedUploadAction = true;
             }
         });
 
@@ -320,6 +328,43 @@ public class Waypoint2Activity extends FragmentActivity implements View.OnClickL
     private void addListener() {
         if (getWaypointMissionOperator() != null) {
             getWaypointMissionOperator().addWaypointEventListener(eventNotificationListener);
+            getWaypointMissionOperator().addActionListener(new WaypointV2ActionListener() {
+                @Override
+                public void onDownloadUpdate(ActionDownloadEvent actionDownloadEvent) {
+
+                }
+
+                @Override
+                public void onUploadUpdate(ActionUploadEvent actionUploadEvent) {
+                    if (actionUploadEvent.getCurrentState() == ActionState.READY_TO_UPLOAD) {
+                        // can upload Actions
+                        canUploadAction = true;
+                    }
+                    if (actionUploadEvent.getPreviousState() == ActionState.UPLOADING
+                            && actionUploadEvent.getCurrentState() == ActionState.READY_TO_EXECUTE) {
+                        // upload action complete, can start mission
+                        // getWaypointMissionOperator().startMission();
+                        canStartMission = true;
+                    }
+                }
+
+                @Override
+                public void onExecutionUpdate(ActionExecutionEvent actionExecutionEvent) {
+                    if (actionExecutionEvent.getError() != null) {
+                        debugLog("action onExecutionUpdate:" + actionExecutionEvent.getError().getDescription());
+                    }
+                }
+
+                @Override
+                public void onExecutionStart() {
+
+                }
+
+                @Override
+                public void onExecutionFinish(DJIWaypointV2Error djiWaypointV2Error) {
+
+                }
+            });
         }
     }
 
@@ -338,18 +383,18 @@ public class Waypoint2Activity extends FragmentActivity implements View.OnClickL
 
         @Override
         public void onUploadUpdate(WaypointV2MissionUploadEvent uploadEvent) {
-            if (uploadEvent.getCurrentState() == WaypointV2MissionState.UPLOADING
-                    || (uploadEvent.getError() != null)) {
+            if ((uploadEvent.getError() != null)) {
                 // deal with the progress or the error info
+                debugLog(uploadEvent.getError().getDescription());
             }
 
             if (uploadEvent.getCurrentState() == WaypointV2MissionState.READY_TO_EXECUTE) {
                 // Can upload actions in it.
                 // getWaypointMissionOperator().uploadWaypointActions();
-                canUploadAction = true;
             }
             if (uploadEvent.getPreviousState() == WaypointV2MissionState.UPLOADING
-                    && uploadEvent.getCurrentState() == WaypointV2MissionState.READY_TO_EXECUTE) {
+                    && uploadEvent.getCurrentState() == WaypointV2MissionState.READY_TO_EXECUTE
+                    && !ifNeedUploadAction) {
                 // upload complete, can start mission
                 // getWaypointMissionOperator().startMission();
                 canStartMission = true;
@@ -361,6 +406,8 @@ public class Waypoint2Activity extends FragmentActivity implements View.OnClickL
                     logTv.setText("cur_state:" + uploadEvent.getCurrentState().name());
                 }
             });
+
+            startWaypointMission();
         }
 
         @Override
@@ -734,6 +781,7 @@ public class Waypoint2Activity extends FragmentActivity implements View.OnClickL
                 } else {
                     setResultToToast("loadWaypoint failed " + error.getDescription());
                 }
+                canUploadMission = true;
             }
         });
 
@@ -742,6 +790,10 @@ public class Waypoint2Activity extends FragmentActivity implements View.OnClickL
 
     private void uploadWayPointMission() {
 
+        if (!canUploadMission) {
+            Toast.makeText(this, "Can`t upload Mission", Toast.LENGTH_SHORT).show();
+            return;
+        }
         getWaypointMissionOperator().uploadMission(new CommonCallbacks.CompletionCallback() {
             @Override
             public void onResult(DJIError error) {
@@ -756,7 +808,10 @@ public class Waypoint2Activity extends FragmentActivity implements View.OnClickL
     }
 
     private void startWaypointMission() {
-
+        if (!canStartMission) {
+            debugLog("can`t start mission");
+            return;
+        }
         getWaypointMissionOperator().startMission(new CommonCallbacks.CompletionCallback() {
             @Override
             public void onResult(DJIError error) {
@@ -777,4 +832,7 @@ public class Waypoint2Activity extends FragmentActivity implements View.OnClickL
 
     }
 
+    private void debugLog(String log) {
+        Log.i("WP2.0", log);
+    }
 }

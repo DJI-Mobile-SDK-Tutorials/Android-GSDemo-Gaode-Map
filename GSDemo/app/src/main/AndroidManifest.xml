@@ -59,18 +59,6 @@
             android:name="com.amap.api.v2.apikey"
             android:value="" /> <!-- 输入申请的API key启用高德地图服务 -->
 
-        <activity
-            android:name="dji.sdk.sdkmanager.DJIAoaControllerActivity"
-            android:theme="@android:style/Theme.Translucent">
-            <intent-filter>
-                <action android:name="android.hardware.usb.action.USB_ACCESSORY_ATTACHED" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.hardware.usb.action.USB_ACCESSORY_ATTACHED"
-                android:resource="@xml/accessory_filter" />
-        </activity>
-
         <service android:name="dji.sdk.sdkmanager.DJIGlobalService" /> <!-- DJI SDK -->
         <activity
             android:name=".ConnectionActivity"
@@ -82,6 +70,13 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <intent-filter>
+                <action android:name="android.hardware.usb.action.USB_ACCESSORY_ATTACHED" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.hardware.usb.action.USB_ACCESSORY_ATTACHED"
+                android:resource="@xml/accessory_filter" />
         </activity>
         <activity
             android:name=".Waypoint1Activity"

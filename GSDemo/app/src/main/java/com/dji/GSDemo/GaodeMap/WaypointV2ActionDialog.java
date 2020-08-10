@@ -78,6 +78,7 @@ public class WaypointV2ActionDialog extends DialogFragment {
 
     List<String> triggerType;
     List<String> actuatorType;
+    List<String> actuatorNames;
 
     private AssociateTriggerFragment associateTriggerFragment;
     private SimpleIntervalTriggerFragment simpleIntervalTriggerFragment;
@@ -92,6 +93,7 @@ public class WaypointV2ActionDialog extends DialogFragment {
     private Fragment currentActuatorFragment;
 
     private IActionCallback actionCallback;
+    ArrayAdapter<String> actuatorAdapter;
 
     private int position;
     private int size;
@@ -119,7 +121,6 @@ public class WaypointV2ActionDialog extends DialogFragment {
         triggerType = new ArrayList<>();
         actuatorType = new ArrayList<>();
         triggerType.add("Please select trigger type");
-        actuatorType.add("Please select actuator type");
         for (ActionTypes.ActionTriggerType type : ActionTypes.ActionTriggerType.values()) {
             if (type == ActionTypes.ActionTriggerType.COMPLEX_REACH_POINTS) {
                 // not support
@@ -127,10 +128,11 @@ public class WaypointV2ActionDialog extends DialogFragment {
             }
             triggerType.add(type.name());
         }
-
-        actuatorType.add(ActionTypes.ActionActuatorType.GIMBAL.name());
-        actuatorType.add(ActionTypes.ActionActuatorType.CAMERA.name());
-        actuatorType.add(ActionTypes.ActionActuatorType.AIRCRAFT_CONTROL.name());
+        actuatorNames = new ArrayList();
+        actuatorNames.add("Please select actuator type");
+        actuatorNames.add(ActionTypes.ActionActuatorType.GIMBAL.name());
+        actuatorNames.add(ActionTypes.ActionActuatorType.CAMERA.name());
+        actuatorType.addAll(actuatorNames);
     }
 
     private void initView() {
@@ -195,8 +197,7 @@ public class WaypointV2ActionDialog extends DialogFragment {
 
             }
         });
-
-        ArrayAdapter<String> actuatorAdapter = new ArrayAdapter(getActivity(),
+        actuatorAdapter = new ArrayAdapter(getActivity(),
                 android.R.layout.simple_spinner_dropdown_item, actuatorType);
         spinnerActuatorType.setAdapter(actuatorAdapter);
         spinnerActuatorType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -255,18 +256,36 @@ public class WaypointV2ActionDialog extends DialogFragment {
     }
 
     private void changeActuatorAdapter(ActionTypes.ActionTriggerType triggerType) {
+        spinnerActuatorType.setAdapter(actuatorAdapter);
         switch (triggerType) {
             case COMPLEX_REACH_POINTS:
+                flushActuator();
                 break;
             case ASSOCIATE:
+                flushActuator();
                 break;
             case SIMPLE_INTERVAL:
+                flushActuator();
                 break;
             case REACH_POINT:
+                flushActuator();
                 break;
             case TRAJECTORY:
+                // this trigger is one by one with ActionActuatorType.AIRCRAFT_CONTROL.
+                // only can be used to control ActionActuatorType.AIRCRAFT_CONTROL.
+                actuatorType.removeAll(actuatorNames);
+                actuatorType.add("Please select actuator type");
+                actuatorType.add(ActionTypes.ActionActuatorType.AIRCRAFT_CONTROL.name());
+                break;
+            default:
                 break;
         }
+    }
+
+    private void flushActuator() {
+        actuatorType.clear();
+        actuatorType.addAll(actuatorNames);
+        actionAdapter.notifyDataSetChanged();
     }
 
     private void hideActuatorFragment() {
