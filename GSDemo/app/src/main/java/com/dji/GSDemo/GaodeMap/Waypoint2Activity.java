@@ -214,7 +214,7 @@ public class Waypoint2Activity extends FragmentActivity implements View.OnClickL
         mapView = findViewById(R.id.map);
         mapView.onCreate(savedInstanceState);
 
-        if(getWaypointMissionOperator() == null) {
+        if (getWaypointMissionOperator() == null) {
             setResultToToast("Not support Waypoint2.0");
             return;
         }
@@ -228,7 +228,7 @@ public class Waypoint2Activity extends FragmentActivity implements View.OnClickL
     }
 
     private void setDroneLocationListener() {
-        if(mFlightController == null){
+        if (mFlightController == null) {
             Tools.showToast(this, "FC is null, comeback later!");
             return;
         }
@@ -266,7 +266,7 @@ public class Waypoint2Activity extends FragmentActivity implements View.OnClickL
                 });
             }
         } else {
-            if ((mRtk =  mFlightController.getRTK()) != null) {
+            if ((mRtk = mFlightController.getRTK()) != null) {
                 mFlightController.getRTK().setStateCallback(null);
             }
             mFlightController.setStateCallback(new FlightControllerState.Callback() {
@@ -445,19 +445,6 @@ public class Waypoint2Activity extends FragmentActivity implements View.OnClickL
     public void onMapClick(LatLng point) {
         if (isAdd == true) {
             markWaypoint(point);
-            WaypointV2 mWaypoint = new WaypointV2.Builder()
-                    .setAltitude(altitude)
-                    .setCoordinate(new LocationCoordinate2D(point.latitude, point.longitude))
-                    .build();
-            //Add Waypoints to Waypoint arraylist;
-            if (waypointMissionBuilder != null) {
-                waypointList.add(mWaypoint);
-                waypointMissionBuilder.addWaypoint(mWaypoint);
-            } else {
-                waypointMissionBuilder = new WaypointV2Mission.Builder();
-                waypointList.add(mWaypoint);
-                waypointMissionBuilder.addWaypoint(mWaypoint);
-            }
         } else {
             setResultToToast("Cannot Add Waypoint");
         }
@@ -569,12 +556,11 @@ public class Waypoint2Activity extends FragmentActivity implements View.OnClickL
                     }
 
                 });
-
-                if (waypointMissionBuilder != null) {
-                    for (WaypointV2 waypointV2 : waypointMissionBuilder.getWaypointList()) {
-                        waypointMissionBuilder.removeWaypoint(waypointV2);
-                    }
+                waypointMissionBuilder = null;
+                if (mMarkers != null) {
+                    mMarkers.clear();
                 }
+
                 updateDroneLocation();
                 break;
             }
@@ -634,6 +620,19 @@ public class Waypoint2Activity extends FragmentActivity implements View.OnClickL
         } else {
             isAdd = false;
             add.setText("Add");
+            for (Marker m : mMarkers.values()) {
+                WaypointV2 mWaypoint = new WaypointV2.Builder()
+                        .setAltitude(altitude)
+                        .setCoordinate(new LocationCoordinate2D(m.getPosition().latitude, m.getPosition().longitude))
+                        .build();
+                //Add Waypoints to Waypoint arraylist;
+                if (waypointMissionBuilder == null) {
+                    waypointMissionBuilder = new WaypointV2Mission.Builder();
+                }
+                waypointList.add(mWaypoint);
+                waypointMissionBuilder.addWaypoint(mWaypoint);
+            }
+
         }
     }
 
@@ -812,6 +811,7 @@ public class Waypoint2Activity extends FragmentActivity implements View.OnClickL
             debugLog("can`t start mission");
             return;
         }
+        canStartMission = false;
         getWaypointMissionOperator().startMission(new CommonCallbacks.CompletionCallback() {
             @Override
             public void onResult(DJIError error) {
