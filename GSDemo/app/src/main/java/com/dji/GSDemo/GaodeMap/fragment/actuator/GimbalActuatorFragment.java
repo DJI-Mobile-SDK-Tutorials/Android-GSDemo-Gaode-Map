@@ -8,12 +8,14 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.widget.AppCompatCheckBox;
 import androidx.fragment.app.Fragment;
 
 import com.dji.GSDemo.GaodeMap.R;
 import com.dji.GSDemo.GaodeMap.Tools;
+import com.dji.GSDemo.GaodeMap.fragment.trigger.ITriggerCallback;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -30,7 +32,7 @@ import dji.common.mission.waypointv2.Action.WaypointGimbalActuatorParam;
  * create an instance of this fragment.
  */
 public class GimbalActuatorFragment extends Fragment implements IActuatorCallback {
-
+    private ITriggerCallback callback;
 
     Unbinder unbinder;
     @BindView(R.id.tv_title)
@@ -60,15 +62,20 @@ public class GimbalActuatorFragment extends Fragment implements IActuatorCallbac
     @BindView(R.id.box_abs_yaw_ref)
     AppCompatCheckBox boxAbsYawRef;
 
-    public static GimbalActuatorFragment newInstance() {
-        GimbalActuatorFragment fragment = new GimbalActuatorFragment();
+    public static GimbalActuatorFragment newInstance(ITriggerCallback callback) {
+        GimbalActuatorFragment fragment = new GimbalActuatorFragment(callback);
         return fragment;
+    }
+
+    private GimbalActuatorFragment(ITriggerCallback callback) {
+        this.callback = callback;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_gimbal_actuator, container, false);
         unbinder = ButterKnife.bind(this, root);
+        flush();
         return root;
     }
 
@@ -76,6 +83,25 @@ public class GimbalActuatorFragment extends Fragment implements IActuatorCallbac
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+    }
+
+    public void flush() {
+        if (getContext() == null) {
+            return;
+        }
+        if (callback.getTrigger() == null) {
+            Toast.makeText(getContext(), "please select trigger.", Toast.LENGTH_SHORT).show();
+            rbAircraftControlGimbal.setVisibility(View.GONE);
+            rbRotateGimbal.setVisibility(View.VISIBLE);
+            return;
+        }
+        if (callback.getTrigger().getTriggerType() == ActionTypes.ActionTriggerType.TRAJECTORY) {
+            rbAircraftControlGimbal.setVisibility(View.VISIBLE);
+            rbRotateGimbal.setVisibility(View.GONE);
+        } else {
+            rbAircraftControlGimbal.setVisibility(View.GONE);
+            rbRotateGimbal.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -115,7 +141,6 @@ public class GimbalActuatorFragment extends Fragment implements IActuatorCallbac
     public ActionTypes.GimbalOperationType getType() {
         switch (radioGimbalType.getCheckedRadioButtonId()) {
             case R.id.rb_rotate_gimbal:
-                // Rotates the gimbal. Only valid when the trigger type is `REACH_POINT`.
                 return ActionTypes.GimbalOperationType.ROTATE_GIMBAL;
             case R.id.rb_aircraft_control_gimbal:
                 // Rotates the gimbal. Only valid when the trigger type is `TRAJECTORY`.

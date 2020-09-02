@@ -63,7 +63,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:hint="please Input yaw angle"
-            android:inputType="numberDecimal"
+            android:inputType="numberSigned|numberDecimal"
             app:layout_constraintLeft_toLeftOf="@id/tv_tip_yaw"
             app:layout_constraintTop_toBottomOf="@id/box_yaw_clockwise" />
 
