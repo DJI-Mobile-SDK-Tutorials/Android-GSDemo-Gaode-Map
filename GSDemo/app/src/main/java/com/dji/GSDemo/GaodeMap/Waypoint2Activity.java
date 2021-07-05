@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
 
 import com.amap.api.maps2d.AMap;
@@ -356,12 +357,12 @@ public class Waypoint2Activity extends FragmentActivity implements View.OnClickL
                 }
 
                 @Override
-                public void onExecutionStart() {
+                public void onExecutionStart(int i) {
 
                 }
 
                 @Override
-                public void onExecutionFinish(DJIWaypointV2Error djiWaypointV2Error) {
+                public void onExecutionFinish(int i, DJIWaypointV2Error djiWaypointV2Error) {
 
                 }
             });
